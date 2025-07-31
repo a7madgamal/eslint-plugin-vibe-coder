@@ -3,4 +3,4 @@
 
 export interface VibeCodingRuleOptions {
   // Common rule options will be defined here
-} 
+}

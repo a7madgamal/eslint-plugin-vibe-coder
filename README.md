@@ -1,6 +1,6 @@
 # ESLint Plugin: VibeCoding 🤖🚫
 
-> **Stop robots from ruining your code vibes!** 
+> **Stop robots from ruining your code vibes!**
 
 This ESLint plugin contains custom rules designed to prevent common bad practices that AI assistants (and humans who code like robots) often make. Because sometimes the best code is the code that doesn't overthink everything.
 
@@ -20,9 +20,7 @@ Add `vibecoding` to your ESLint configuration:
 
 ```json
 {
-  "extends": [
-    "plugin:vibecoding/recommended"
-  ]
+  "extends": ["plugin:vibecoding/recommended"]
 }
 ```
 
@@ -39,7 +37,7 @@ Or configure individual rules:
 
 ## 🛡️ Rules
 
-*Coming soon!* Rules will be added here as they are developed.
+_Coming soon!_ Rules will be added here as they are developed.
 
 ## 🤖 Why "Anti-Robot" Rules?
 
@@ -90,4 +88,4 @@ Have an idea for a rule that prevents robot coding practices? We'd love to hear 
 
 ---
 
-*Remember: The best code is the code that another human can understand and maintain. Let's keep it that way!* 🎉 
+_Remember: The best code is the code that another human can understand and maintain. Let's keep it that way!_ 🎉
