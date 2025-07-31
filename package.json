@@ -27,7 +27,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/a7madgamal/eslint-plugin-vibe-coder.git"
+    "url": "git+https://github.com/a7madgamal/eslint-plugin-vibe-coder.git"
   },
   "bugs": {
     "url": "https://github.com/a7madgamal/eslint-plugin-vibe-coder/issues"
