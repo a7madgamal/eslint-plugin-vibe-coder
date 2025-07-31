@@ -1,8 +1,15 @@
-import { RuleTester } from 'eslint';
-const rule = require('./no-optional-properties');
+// @ts-expect-error No types published for @typescript-eslint/rule-tester
+import { RuleTester } from '@typescript-eslint/rule-tester';
+import rule from './no-optional-properties.js';
+import type {
+  RuleModule,
+  RuleListener,
+} from '@typescript-eslint/utils/dist/ts-eslint';
+
+// Provide afterAll for RuleTester compatibility with Mocha
+(globalThis as unknown as { afterAll: typeof after }).afterAll = after;
 
 const ruleTester = new RuleTester({
-  parser: require.resolve('@typescript-eslint/parser'),
   parserOptions: {
     ecmaVersion: 2022,
     sourceType: 'module',
@@ -87,10 +94,14 @@ describe('no-optional-properties', () => {
       `,
     ];
 
-    ruleTester.run('no-optional-properties', rule, {
-      valid: validCases,
-      invalid: [],
-    });
+    ruleTester.run(
+      'no-optional-properties',
+      rule as unknown as RuleModule<'noOptionalProperty', [], RuleListener>,
+      {
+        valid: validCases,
+        invalid: [],
+      }
+    );
   });
 
   it('should fail for invalid cases', () => {
@@ -256,9 +267,13 @@ describe('no-optional-properties', () => {
       },
     ];
 
-    ruleTester.run('no-optional-properties', rule, {
-      valid: [],
-      invalid: invalidCases,
-    });
+    ruleTester.run(
+      'no-optional-properties',
+      rule as unknown as RuleModule<'noOptionalProperty', [], RuleListener>,
+      {
+        valid: [],
+        invalid: invalidCases,
+      }
+    );
   });
 });

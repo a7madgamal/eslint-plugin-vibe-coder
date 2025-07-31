@@ -1,4 +1,5 @@
 import { ESLintUtils, type TSESTree } from '@typescript-eslint/utils';
+import type { RuleContext } from '@typescript-eslint/utils/dist/ts-eslint';
 
 const createRule = ESLintUtils.RuleCreator(
   (name) => `https://github.com/your-repo/rule/${name}`
@@ -6,7 +7,7 @@ const createRule = ESLintUtils.RuleCreator(
 
 const rule = createRule({
   defaultOptions: [],
-  create(context) {
+  create(context: RuleContext<'noOptionalProperty', []>) {
     return {
       TSPropertySignature(node: TSESTree.TSPropertySignature) {
         // Check if the property is optional (has ?)
@@ -141,8 +142,4 @@ const rule = createRule({
   },
 });
 
-// Export the rule object directly for compatibility with standard ESLint RuleTester
-module.exports = rule;
-
-// Also export for ES modules compatibility
 export default rule;
