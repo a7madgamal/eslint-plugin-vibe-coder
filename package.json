@@ -57,8 +57,8 @@
     "typescript": "^5.3.3"
   },
   "scripts": {
-    "build": "tsc",
-    "test": "mocha --require ts-node/register \"src/**/*.test.ts\"",
+    "build": "npm run lint && tsc",
+    "test": "ts-node --esm node_modules/.bin/mocha src/**/*.test.ts",
     "test:watch": "mocha --require ts-node/register --watch \"src/**/*.test.ts\"",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",

@@ -1,10 +1,11 @@
-import { ESLintUtils, TSESTree } from '@typescript-eslint/utils';
+import { ESLintUtils, type TSESTree } from '@typescript-eslint/utils';
 
 const createRule = ESLintUtils.RuleCreator(
   (name) => `https://github.com/your-repo/rule/${name}`
 );
 
 const rule = createRule({
+  defaultOptions: [],
   create(context) {
     return {
       TSPropertySignature(node: TSESTree.TSPropertySignature) {
@@ -21,7 +22,7 @@ const rule = createRule({
         const typeAnnotation = node.typeAnnotation?.typeAnnotation;
 
         if (typeAnnotation?.type === 'TSUnionType') {
-          const { types } = typeAnnotation;
+          const types = typeAnnotation.types;
           const hasOptionalType = types.some((type) => {
             // Check for undefined and null keywords
             if (
@@ -45,7 +46,7 @@ const rule = createRule({
         if (typeAnnotation?.type === 'TSArrayType') {
           const elementType = typeAnnotation.elementType;
           if (elementType.type === 'TSUnionType') {
-            const { types } = elementType;
+            const types = elementType.types;
             const hasOptionalType = types.some((type) => {
               if (
                 type.type === 'TSUndefinedKeyword' ||
@@ -79,7 +80,7 @@ const rule = createRule({
         const typeAnnotation = node.typeAnnotation?.typeAnnotation;
 
         if (typeAnnotation?.type === 'TSUnionType') {
-          const { types } = typeAnnotation;
+          const types = typeAnnotation.types;
           const hasOptionalType = types.some((type) => {
             // Check for undefined and null keywords
             if (
@@ -103,7 +104,7 @@ const rule = createRule({
         if (typeAnnotation?.type === 'TSArrayType') {
           const elementType = typeAnnotation.elementType;
           if (elementType.type === 'TSUnionType') {
-            const { types } = elementType;
+            const types = elementType.types;
             const hasOptionalType = types.some((type) => {
               if (
                 type.type === 'TSUndefinedKeyword' ||
@@ -138,11 +139,10 @@ const rule = createRule({
         'Optional properties should be avoided. Use required properties instead.',
     },
   },
-  defaultOptions: [],
 });
 
 // Export the rule object directly for compatibility with standard ESLint RuleTester
 module.exports = rule;
 
 // Also export for ES modules compatibility
-export { rule };
+export default rule;
