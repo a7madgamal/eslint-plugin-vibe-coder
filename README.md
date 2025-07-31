@@ -14,6 +14,16 @@ We've all been there - you ask an AI to help with some code, and it gives you a 
 npm install --save-dev eslint-plugin-vibecoding
 ```
 
+## 🔄 CI/CD
+
+This project uses GitHub Actions for continuous integration and deployment. The workflow automatically:
+
+- Builds and tests on multiple Node.js versions
+- Publishes to npm on push to main branch
+- Creates GitHub releases on tag pushes
+
+See [`.github/README.md`](.github/README.md) for detailed setup instructions.
+
 ## 📝 Usage
 
 Add `vibecoding` to your ESLint configuration:
@@ -118,7 +128,30 @@ interface Config {
 }
 ```
 
-**Edge Cases Not Currently Detected:**
+## 🚀 Releasing
+
+To release a new version:
+
+```bash
+# For patch releases (1.0.0 -> 1.0.1)
+npm run release:patch
+
+# For minor releases (1.0.0 -> 1.1.0)
+npm run release:minor
+
+# For major releases (1.0.0 -> 2.0.0)
+npm run release:major
+```
+
+The release script will:
+
+1. Update the version in `package.json`
+2. Build and test the project
+3. Commit changes and create a git tag
+4. Push to GitHub, triggering the CI/CD pipeline
+5. Automatically publish to npm
+
+## 🔍 Edge Cases Not Currently Detected
 
 The rule currently detects basic optional properties and union types with `undefined`/`null`, but some advanced TypeScript patterns are not yet covered:
 
