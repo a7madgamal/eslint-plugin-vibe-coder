@@ -11,7 +11,7 @@ We've all been there - you ask an AI to help with some code, and it gives you a 
 ## 🚀 Installation
 
 ```bash
-npm install --save-dev eslint-plugin-vibecoding
+npm install --save-dev eslint-plugin-vibe-coder
 ```
 
 ## 🔄 CI/CD
@@ -26,11 +26,11 @@ See [`.github/README.md`](.github/README.md) for detailed setup instructions.
 
 ## 📝 Usage
 
-Add `vibecoding` to your ESLint configuration:
+Add `vibe-coder` to your ESLint configuration:
 
 ```json
 {
-  "extends": ["plugin:vibecoding/recommended"]
+  "extends": ["plugin:vibe-coder/recommended"]
 }
 ```
 
@@ -38,7 +38,7 @@ Or configure individual rules:
 
 ```json
 {
-  "plugins": ["vibecoding"],
+  "plugins": ["vibe-coder"],
   "rules": {
     // Rules will be configured here
   }
@@ -123,7 +123,7 @@ interface Config {
 ```json
 {
   "rules": {
-    "vibecoding/no-optional-properties": "error"
+    "vibe-coder/no-optional-properties": "error"
   }
 }
 ```

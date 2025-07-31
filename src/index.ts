@@ -6,15 +6,15 @@ const plugin = {
   },
   configs: {
     recommended: {
-      plugins: ['vibecoding'],
+      plugins: ['vibe-coder'],
       rules: {
-        'vibecoding/no-optional-properties': 'error',
+        'vibe-coder/no-optional-properties': 'error',
       },
     },
     strict: {
-      plugins: ['vibecoding'],
+      plugins: ['vibe-coder'],
       rules: {
-        'vibecoding/no-optional-properties': 'error',
+        'vibe-coder/no-optional-properties': 'error',
       },
     },
   },
