@@ -1,2 +1,3 @@
 // Export all rules here when they are created
-export { default as noOptionalProperties } from './no-optional-properties.js';
+import { rule } from './no-optional-properties';
+export { rule as noOptionalProperties };

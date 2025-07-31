@@ -1,15 +1,11 @@
-import { describe, it } from 'vitest';
-import { RuleTester } from '@typescript-eslint/rule-tester';
-import rule from './no-optional-properties.js';
-import parser from '@typescript-eslint/parser';
+import { RuleTester } from 'eslint';
+const rule = require('./no-optional-properties');
 
 const ruleTester = new RuleTester({
-  languageOptions: {
-    parser,
-    parserOptions: {
-      ecmaVersion: 2022,
-      sourceType: 'module',
-    },
+  parser: require.resolve('@typescript-eslint/parser'),
+  parserOptions: {
+    ecmaVersion: 2022,
+    sourceType: 'module',
   },
 });
 
@@ -34,6 +30,59 @@ describe('no-optional-properties', () => {
         interface User {
           role: 'admin' | 'user' | 'guest';
           status: 'active' | 'inactive';
+        }
+      `,
+      // Valid: Complex types without optional
+      `
+        interface Product {
+          id: string;
+          name: string;
+          price: number;
+          category: 'electronics' | 'clothing' | 'books';
+          tags: string[];
+          metadata: Record<string, unknown>;
+        }
+      `,
+      // Valid: Nested interfaces
+      `
+        interface Address {
+          street: string;
+          city: string;
+          country: string;
+        }
+        
+        interface Customer {
+          id: string;
+          name: string;
+          address: Address;
+          preferences: {
+            theme: 'light' | 'dark';
+            language: 'en' | 'es' | 'fr';
+          };
+        }
+      `,
+      // Valid: Generic types
+      `
+        interface ApiResponse<T> {
+          data: T;
+          status: number;
+          message: string;
+        }
+      `,
+      // Valid: Function types
+      `
+        interface EventHandler {
+          onSuccess: (data: unknown) => void;
+          onError: (error: Error) => void;
+          onComplete: () => void;
+        }
+      `,
+      // Valid: Array types
+      `
+        interface Collection {
+          items: string[];
+          count: number;
+          isEmpty: boolean;
         }
       `,
     ];
@@ -96,6 +145,114 @@ describe('no-optional-properties', () => {
           }
         `,
         errors: [{ messageId: 'noOptionalProperty' as const }],
+      },
+      // Invalid: Multiple optional properties
+      {
+        code: `
+          interface FormData {
+            firstName?: string;
+            lastName?: string;
+            email?: string;
+            phone?: string;
+          }
+        `,
+        errors: [
+          { messageId: 'noOptionalProperty' as const },
+          { messageId: 'noOptionalProperty' as const },
+          { messageId: 'noOptionalProperty' as const },
+          { messageId: 'noOptionalProperty' as const },
+        ],
+      },
+      // Invalid: Complex union with undefined
+      {
+        code: `
+          interface ApiResponse {
+            data: User[] | undefined;
+            error: string | undefined;
+            timestamp: number;
+          }
+        `,
+        errors: [
+          { messageId: 'noOptionalProperty' as const },
+          { messageId: 'noOptionalProperty' as const },
+        ],
+      },
+      // Invalid: Nested optional properties
+      {
+        code: `
+          interface Settings {
+            theme: {
+              primary?: string;
+              secondary?: string;
+            };
+            notifications: {
+              email?: boolean;
+              push?: boolean;
+            };
+          }
+        `,
+        errors: [
+          { messageId: 'noOptionalProperty' as const },
+          { messageId: 'noOptionalProperty' as const },
+          { messageId: 'noOptionalProperty' as const },
+          { messageId: 'noOptionalProperty' as const },
+        ],
+      },
+      // Invalid: Generic with optional
+      {
+        code: `
+          interface CacheEntry<T> {
+            key: string;
+            value?: T;
+            expiresAt: number;
+          }
+        `,
+        errors: [{ messageId: 'noOptionalProperty' as const }],
+      },
+      // Invalid: Function with optional parameters
+      {
+        code: `
+          interface Callback {
+            onSuccess?: (data: unknown) => void;
+            onError?: (error: Error) => void;
+            onComplete?: () => void;
+          }
+        `,
+        errors: [
+          { messageId: 'noOptionalProperty' as const },
+          { messageId: 'noOptionalProperty' as const },
+          { messageId: 'noOptionalProperty' as const },
+        ],
+      },
+      // Invalid: Array with optional elements
+      {
+        code: `
+          interface TodoList {
+            items: (string | undefined)[];
+            completed: (boolean | null)[];
+            priority: number;
+          }
+        `,
+        errors: [
+          { messageId: 'noOptionalProperty' as const },
+          { messageId: 'noOptionalProperty' as const },
+        ],
+      },
+      // Invalid: Mixed valid and invalid
+      {
+        code: `
+          interface Mixed {
+            required: string;
+            optional?: number;
+            alsoRequired: boolean;
+            nullable: string | null;
+            validUnion: 'a' | 'b' | 'c';
+          }
+        `,
+        errors: [
+          { messageId: 'noOptionalProperty' as const },
+          { messageId: 'noOptionalProperty' as const },
+        ],
       },
     ];
 

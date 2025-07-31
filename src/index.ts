@@ -1,5 +1,4 @@
-import type { Linter } from '@typescript-eslint/utils/ts-eslint';
-import { noOptionalProperties } from './rules/index.js';
+import { noOptionalProperties } from './rules/index';
 
 const plugin = {
   rules: {
@@ -19,6 +18,6 @@ const plugin = {
       },
     },
   },
-} satisfies Linter.Plugin;
+};
 
 export default plugin;
