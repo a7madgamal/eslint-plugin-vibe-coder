@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-vibe-coder",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "ESLint plugin with custom rules to prevent common bad practices made by robots (and humans who code like robots)",
   "main": "dist/index.js",
   "type": "module",
@@ -64,9 +64,6 @@
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
     "format": "prettier --write src/**/*.ts",
-    "prepare": "npm run build",
-    "release:patch": "node scripts/release.js patch",
-    "release:minor": "node scripts/release.js minor",
-    "release:major": "node scripts/release.js major"
+    "prepare": "npm run build"
   }
 }
