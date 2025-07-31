@@ -1,17 +1,18 @@
 import type { ESLint } from 'eslint';
+import { noOptionalProperties } from './rules/index.js';
 
 const plugin: ESLint.Plugin = {
   rules: {
-    // Rules will be added here
+    'no-optional-properties': noOptionalProperties,
   },
   configs: {
     recommended: {
       plugins: ['vibecoding'],
       rules: {
-        // Recommended rules will be added here
+        'vibecoding/no-optional-properties': 'error',
       },
     },
   },
 };
 
-export default plugin; 
+export default plugin;

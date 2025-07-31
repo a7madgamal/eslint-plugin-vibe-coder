@@ -37,7 +37,57 @@ Or configure individual rules:
 
 ## 🛡️ Rules
 
-_Coming soon!_ Rules will be added here as they are developed.
+### `no-optional-properties`
+
+Prevents optional properties in TypeScript types and interfaces to encourage explicit design decisions. Optional properties often indicate unclear requirements or lazy design.
+
+**Why this rule exists:**
+Optional properties can make code harder to understand and maintain. They often indicate that the developer hasn't thought through the requirements clearly. This rule encourages you to either:
+
+- Make the property required if it's always needed
+- Use union types (e.g., `string | undefined`) for truly optional values
+- Document why a property is optional with a comment
+
+**Examples:**
+
+❌ **Bad:**
+
+```typescript
+interface User {
+  name?: string; // Error: Optional property without explanation
+  email: string;
+}
+```
+
+✅ **Good:**
+
+```typescript
+interface User {
+  name: string; // Required property
+  email: string;
+}
+```
+
+✅ **Good with explanation:**
+
+```typescript
+interface User {
+  //optional: This field is only set after email verification
+  verifiedAt?: Date;
+  name: string;
+  email: string;
+}
+```
+
+**Configuration:**
+
+```json
+{
+  "rules": {
+    "vibecoding/no-optional-properties": "error"
+  }
+}
+```
 
 ## 🤖 Why "Anti-Robot" Rules?
 
