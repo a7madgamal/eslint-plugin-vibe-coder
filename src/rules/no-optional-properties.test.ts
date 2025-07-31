@@ -1,89 +1,107 @@
-import { RuleTester } from 'eslint';
+import { describe, it } from 'vitest';
+import { RuleTester } from '@typescript-eslint/rule-tester';
 import rule from './no-optional-properties.js';
+import parser from '@typescript-eslint/parser';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ruleTester = new RuleTester({
-  parser: require.resolve('@typescript-eslint/parser'),
-  parserOptions: {
-    ecmaVersion: 2022,
-    sourceType: 'module',
+  languageOptions: {
+    parser,
+    parserOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module',
+    },
   },
 });
 
-ruleTester.run('no-optional-properties', rule, {
-  valid: [
-    // Valid: Required properties
-    `
-      interface User {
-        name: string;
-        email: string;
-      }
-    `,
-    `
-      type Config = {
-        port: number;
-        host: string;
-      }
-    `,
-    // Valid: Optional properties with proper comment
-    `
-      interface User {
-        //optional: This field is only set after email verification
-        verifiedAt?: Date;
-        name: string;
-        email: string;
-      }
-    `,
-    `
-      type Config = {
-        //optional: Only needed for development
-        debug?: boolean;
-        port: number;
-        host: string;
-      }
-    `,
-  ],
-  invalid: [
-    // Invalid: Optional property without comment
-    {
-      code: `
+describe('no-optional-properties', () => {
+  it('should pass for valid cases', () => {
+    const validCases = [
+      // Valid: Required properties
+      `
         interface User {
-          name?: string;
+          name: string;
           email: string;
         }
       `,
-      errors: [{ messageId: 'noOptionalProperty' }],
-    },
-    {
-      code: `
+      `
         type Config = {
-          port?: number;
+          port: number;
           host: string;
         }
       `,
-      errors: [{ messageId: 'noOptionalProperty' }],
-    },
+      // Valid: Union types without undefined/null
+      `
+        interface User {
+          role: 'admin' | 'user' | 'guest';
+          status: 'active' | 'inactive';
+        }
+      `,
+    ];
 
-    // Invalid: Wrong comment format
-    {
-      code: `
-        interface User {
-          // This is optional
-          name?: string;
-          email: string;
-        }
-      `,
-      errors: [{ messageId: 'noOptionalProperty' }],
-    },
-    {
-      code: `
-        interface User {
-          /* optional: This should work */
-          name?: string;
-          email: string;
-        }
-      `,
-      errors: [{ messageId: 'noOptionalProperty' }],
-    },
-  ],
+    ruleTester.run('no-optional-properties', rule, {
+      valid: validCases,
+      invalid: [],
+    });
+  });
+
+  it('should fail for invalid cases', () => {
+    const invalidCases = [
+      // Invalid: Optional property
+      {
+        code: `
+          interface User {
+            name?: string;
+            email: string;
+          }
+        `,
+        errors: [{ messageId: 'noOptionalProperty' as const }],
+      },
+      {
+        code: `
+          type Config = {
+            port?: number;
+            host: string;
+          }
+        `,
+        errors: [{ messageId: 'noOptionalProperty' as const }],
+      },
+      // Invalid: Union with undefined
+      {
+        code: `
+          interface User {
+            name: string | undefined;
+            email: string;
+          }
+        `,
+        errors: [{ messageId: 'noOptionalProperty' as const }],
+      },
+      // Invalid: Union with null
+      {
+        code: `
+          interface User {
+            avatar: string | null;
+            email: string;
+          }
+        `,
+        errors: [{ messageId: 'noOptionalProperty' as const }],
+      },
+      // Invalid: Optional property with comment (should still fail)
+      {
+        code: `
+          interface User {
+            //optional: This field is only set after email verification
+            verifiedAt?: Date;
+            name: string;
+            email: string;
+          }
+        `,
+        errors: [{ messageId: 'noOptionalProperty' as const }],
+      },
+    ];
+
+    ruleTester.run('no-optional-properties', rule, {
+      valid: [],
+      invalid: invalidCases,
+    });
+  });
 });

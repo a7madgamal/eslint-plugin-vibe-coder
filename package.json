@@ -40,8 +40,10 @@
   "devDependencies": {
     "@types/eslint": "^8.56.0",
     "@types/node": "^20.10.0",
-    "@typescript-eslint/eslint-plugin": "^6.13.0",
-    "@typescript-eslint/parser": "^6.13.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "@typescript-eslint/rule-tester": "^8.38.0",
+    "@typescript-eslint/utils": "^8.38.0",
     "eslint": "^8.55.0",
     "eslint-plugin-import": "^2.29.0",
     "prettier": "^3.1.0",
@@ -50,7 +52,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "vitest",
+    "test": "vitest run",
     "test:watch": "vitest --watch",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",

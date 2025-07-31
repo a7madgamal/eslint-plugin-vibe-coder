@@ -42,11 +42,7 @@ Or configure individual rules:
 Prevents optional properties in TypeScript types and interfaces to encourage explicit design decisions. Optional properties often indicate unclear requirements or lazy design.
 
 **Why this rule exists:**
-Optional properties can make code harder to understand and maintain. They often indicate that the developer hasn't thought through the requirements clearly. This rule encourages you to either:
-
-- Make the property required if it's always needed
-- Use union types (e.g., `string | undefined`) for truly optional values
-- Document why a property is optional with a comment
+Optional properties can make code harder to understand and maintain. They often indicate that the developer hasn't thought through the requirements clearly. This rule prevents all forms of optional properties to encourage explicit design decisions.
 
 **Examples:**
 
@@ -54,8 +50,30 @@ Optional properties can make code harder to understand and maintain. They often 
 
 ```typescript
 interface User {
-  name?: string; // Error: Optional property without explanation
+  name?: string; // Error: Optional property
+  avatar: string | null; // Error: Union with null
+  metadata: string | undefined; // Error: Union with undefined
   email: string;
+}
+
+// Type aliases with optional properties
+type UserConfig = {
+  theme?: 'light' | 'dark'; // Error: Optional property
+  language: string;
+};
+
+// Intersection types with optional properties
+interface Base {
+  name: string;
+}
+interface Optional {
+  email?: string;
+}
+type Combined = Base & Optional; // Error: email is optional
+
+// Index signatures with optional types
+interface Config {
+  [key: string]: string | undefined; // Error: Values can be undefined
 }
 ```
 
@@ -64,18 +82,29 @@ interface User {
 ```typescript
 interface User {
   name: string; // Required property
+  avatar: string; // Required property
+  metadata: string; // Required property
   email: string;
 }
-```
 
-✅ **Good with explanation:**
+// Type aliases with required properties
+type UserConfig = {
+  theme: 'light' | 'dark'; // Required property
+  language: string;
+};
 
-```typescript
-interface User {
-  //optional: This field is only set after email verification
-  verifiedAt?: Date;
+// Intersection types with required properties
+interface Base {
   name: string;
+}
+interface Extended {
   email: string;
+}
+type Combined = Base & Extended; // All properties required
+
+// Index signatures with required types
+interface Config {
+  [key: string]: string; // All values required
 }
 ```
 
@@ -88,6 +117,23 @@ interface User {
   }
 }
 ```
+
+**Edge Cases Not Currently Detected:**
+
+The rule currently detects basic optional properties and union types with `undefined`/`null`, but some advanced TypeScript patterns are not yet covered:
+
+- **Type Aliases with Optional Properties**: `type UserConfig = { theme?: 'light' | 'dark' }`
+- **Intersection Types with Optional Properties**: `type Combined = Base & Optional`
+- **Index Signatures with Optional Types**: `interface Config { [key: string]: string | undefined }`
+- **Generic Type Parameters**: `interface Container<T = string>`
+- **Conditional Types**: `type OptionalIf<T, U> = T extends U ? string | undefined : string`
+- **Mapped Types**: `type Partial<T> = { [P in keyof T]?: T[P] }`
+- **Utility Types**: `Partial<User>`, `PickOptional<T, K>`
+- **Function Parameter Types**: `(data: string | undefined) => void`
+- **Template Literal Types**: `type OptionalField<T> = \`${string & keyof T}?\``
+- **Complex Union Types**: Union types with optional branches in complex structures
+
+The first three edge cases (Type Aliases, Intersection Types, Index Signatures) are planned for future implementation.
 
 ## 🤖 Why "Anti-Robot" Rules?
 

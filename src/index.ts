@@ -1,7 +1,7 @@
-import type { ESLint } from 'eslint';
+import type { Linter } from '@typescript-eslint/utils/ts-eslint';
 import { noOptionalProperties } from './rules/index.js';
 
-const plugin: ESLint.Plugin = {
+const plugin = {
   rules: {
     'no-optional-properties': noOptionalProperties,
   },
@@ -12,7 +12,13 @@ const plugin: ESLint.Plugin = {
         'vibecoding/no-optional-properties': 'error',
       },
     },
+    strict: {
+      plugins: ['vibecoding'],
+      rules: {
+        'vibecoding/no-optional-properties': 'error',
+      },
+    },
   },
-};
+} satisfies Linter.Plugin;
 
 export default plugin;

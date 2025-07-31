@@ -3,7 +3,6 @@
     "es2022": true,
     "node": true
   },
-
   "extends": ["eslint:recommended"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -13,6 +12,14 @@
   },
   "plugins": ["@typescript-eslint"],
   "rules": {
+    // Ban 'as' keyword
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "TSAsExpression",
+        "message": "Type assertions using 'as' are not allowed. Use proper type guards or interfaces instead."
+      }
+    ],
     // TypeScript rules
     "@typescript-eslint/no-unused-vars": "error",
     "@typescript-eslint/no-explicit-any": "error",
@@ -29,14 +36,13 @@
     "@typescript-eslint/consistent-type-assertions": "error",
     "@typescript-eslint/member-delimiter-style": "error",
     "@typescript-eslint/method-signature-style": "error",
+    "@typescript-eslint/no-confusing-void-expression": "error",
     "@typescript-eslint/prefer-function-type": "error",
     "@typescript-eslint/prefer-includes": "error",
     "@typescript-eslint/prefer-string-starts-ends-with": "error",
     "@typescript-eslint/prefer-ts-expect-error": "error",
     "@typescript-eslint/require-array-sort-compare": "error",
-
-    // ESLint core rules
-    "prefer-const": "off",
+    // Core ESLint rules
     "no-console": "warn",
     "no-debugger": "error",
     "no-alert": "error",

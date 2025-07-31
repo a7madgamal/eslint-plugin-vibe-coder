@@ -1,66 +1,62 @@
-import type { Rule } from 'eslint';
+import { ESLintUtils, TSESTree } from '@typescript-eslint/utils';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const rule: Rule.RuleModule = {
-  meta: {
-    type: 'suggestion',
-    docs: {
-      description:
-        'Prevent optional properties in types and interfaces to encourage explicit design decisions',
-      category: 'Best Practices',
-      recommended: true,
-    },
-    fixable: undefined,
-    schema: [],
-    messages: {
-      noOptionalProperty:
-        'Optional properties should be avoided. Use required properties or union types instead. If this property is truly optional, add a comment above: "//optional: reason"',
-    },
-  },
-  create(context: Rule.RuleContext) {
+const createRule = ESLintUtils.RuleCreator(
+  (name) => `https://github.com/your-repo/rule/${name}`
+);
+
+export const rule = createRule({
+  create(context) {
     return {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      TSPropertySignature(node: any) {
+      TSPropertySignature(node: TSESTree.TSPropertySignature) {
         // Check if the property is optional (has ?)
-        if (node.optional) {
-          // Get the previous token to check for comments
-          const sourceCode = context.getSourceCode();
-          const prevToken = sourceCode.getTokenBefore(node);
+        if (node.optional === true) {
+          context.report({
+            node,
+            messageId: 'noOptionalProperty',
+          });
+          return;
+        }
 
-          if (prevToken) {
-            const comments = sourceCode.getCommentsBefore(prevToken);
-            const hasOptionalComment = comments.some(
-              (comment) =>
-                comment.type === 'Line' &&
-                comment.value.trim().startsWith('optional:')
-            );
+        // Check if the type is a union with undefined or null
+        const typeAnnotation = node.typeAnnotation?.typeAnnotation;
 
-            if (!hasOptionalComment) {
-              context.report({
-                node,
-                messageId: 'noOptionalProperty',
-              });
+        if (typeAnnotation?.type === 'TSUnionType') {
+          const { types } = typeAnnotation;
+          const hasOptionalType = types.some((type) => {
+            // Check for undefined and null keywords
+            if (
+              type.type === 'TSUndefinedKeyword' ||
+              type.type === 'TSNullKeyword'
+            ) {
+              return true;
             }
-          } else {
-            // No previous token, check comments before the node itself
-            const comments = sourceCode.getCommentsBefore(node);
-            const hasOptionalComment = comments.some(
-              (comment) =>
-                comment.type === 'Line' &&
-                comment.value.trim().startsWith('optional:')
-            );
+            return false;
+          });
 
-            if (!hasOptionalComment) {
-              context.report({
-                node,
-                messageId: 'noOptionalProperty',
-              });
-            }
+          if (hasOptionalType) {
+            context.report({
+              node,
+              messageId: 'noOptionalProperty',
+            });
           }
         }
       },
     };
   },
-};
+  name: 'no-optional-properties',
+  meta: {
+    docs: {
+      description:
+        'Disallow optional properties in TypeScript interfaces and types',
+    },
+    messages: {
+      noOptionalProperty:
+        'Optional properties should be avoided. Use required properties instead.',
+    },
+    type: 'suggestion',
+    schema: [],
+  },
+  defaultOptions: [],
+});
 
 export default rule;
