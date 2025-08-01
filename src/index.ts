@@ -1,4 +1,4 @@
-import { noOptionalProperties } from './rules/index';
+import noOptionalProperties from './rules/index';
 
 const plugin = {
   rules: {
