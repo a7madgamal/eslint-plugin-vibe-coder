@@ -1,6 +1,6 @@
 // @ts-expect-error No types published for @typescript-eslint/rule-tester
 import { RuleTester } from '@typescript-eslint/rule-tester';
-import rule from './no-optional-properties.js';
+import { noOptionalProperties } from './no-optional-properties';
 import type {
   RuleModule,
   RuleListener,
@@ -10,9 +10,13 @@ import type {
 (globalThis as unknown as { afterAll: typeof after }).afterAll = after;
 
 const ruleTester = new RuleTester({
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2022,
     sourceType: 'module',
+    ecmaFeatures: {
+      jsx: true,
+    },
   },
 });
 
@@ -20,83 +24,103 @@ describe('no-optional-properties', () => {
   it('should pass for valid cases', () => {
     const validCases = [
       // Valid: Required properties
-      `
-        interface User {
-          name: string;
-          email: string;
-        }
-      `,
-      `
-        type Config = {
-          port: number;
-          host: string;
-        }
-      `,
+      {
+        code: `
+          interface User {
+            name: string;
+            email: string;
+          }
+        `,
+      },
+      {
+        code: `
+          type Config = {
+            port: number;
+            host: string;
+          }
+        `,
+      },
       // Valid: Union types without undefined/null
-      `
-        interface User {
-          role: 'admin' | 'user' | 'guest';
-          status: 'active' | 'inactive';
-        }
-      `,
+      {
+        code: `
+          interface User {
+            role: 'admin' | 'user' | 'guest';
+            status: 'active' | 'inactive';
+          }
+        `,
+      },
       // Valid: Complex types without optional
-      `
-        interface Product {
-          id: string;
-          name: string;
-          price: number;
-          category: 'electronics' | 'clothing' | 'books';
-          tags: string[];
-          metadata: Record<string, unknown>;
-        }
-      `,
+      {
+        code: `
+          interface Product {
+            id: string;
+            name: string;
+            price: number;
+            category: 'electronics' | 'clothing' | 'books';
+            tags: string[];
+            metadata: Record<string, unknown>;
+          }
+        `,
+      },
       // Valid: Nested interfaces
-      `
-        interface Address {
-          street: string;
-          city: string;
-          country: string;
-        }
-        
-        interface Customer {
-          id: string;
-          name: string;
-          address: Address;
-          preferences: {
-            theme: 'light' | 'dark';
-            language: 'en' | 'es' | 'fr';
-          };
-        }
-      `,
+      {
+        code: `
+          interface Address {
+            street: string;
+            city: string;
+            country: string;
+          }
+          
+          interface Customer {
+            id: string;
+            name: string;
+            address: Address;
+            preferences: {
+              theme: 'light' | 'dark';
+              language: 'en' | 'es' | 'fr';
+            };
+          }
+        `,
+      },
       // Valid: Generic types
-      `
-        interface ApiResponse<T> {
-          data: T;
-          status: number;
-          message: string;
-        }
-      `,
+      {
+        code: `
+          interface ApiResponse<T> {
+            data: T;
+            status: number;
+            message: string;
+          }
+        `,
+      },
       // Valid: Function types
-      `
-        interface EventHandler {
-          onSuccess: (data: unknown) => void;
-          onError: (error: Error) => void;
-          onComplete: () => void;
-        }
-      `,
+      {
+        code: `
+          interface EventHandler {
+            onSuccess: (data: unknown) => void;
+            onError: (error: Error) => void;
+            onComplete: () => void;
+          }
+        `,
+      },
       // Valid: Array types
-      `
-        interface Collection {
-          items: string[];
-          count: number;
-          isEmpty: boolean;
-        }
-      `,
+      {
+        code: `
+          interface Collection {
+            items: string[];
+            count: number;
+            isEmpty: boolean;
+          }
+        `,
+      },
     ];
 
     ruleTester.run(
-      'no-optional-properties',
-      rule as unknown as RuleModule<'noOptionalProperty', [], RuleListener>,
+      'eslint-plugin-vibe-coder/no-optional-properties',
+      noOptionalProperties as unknown as RuleModule<
+        'noOptionalProperty',
+        [],
+        RuleListener
+      >,
       {
         valid: validCases,
         invalid: [],
@@ -268,8 +292,12 @@ describe('no-optional-properties', () => {
     ];
 
     ruleTester.run(
-      'no-optional-properties',
-      rule as unknown as RuleModule<'noOptionalProperty', [], RuleListener>,
+      'eslint-plugin-vibe-coder/no-optional-properties',
+      noOptionalProperties as unknown as RuleModule<
+        'noOptionalProperty',
+        [],
+        RuleListener
+      >,
       {
         valid: [],
         invalid: invalidCases,

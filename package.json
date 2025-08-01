@@ -1,6 +1,7 @@
 {
   "name": "eslint-plugin-vibe-coder",
   "version": "0.0.3",
+  "type": "module",
   "description": "ESLint plugin with custom rules to prevent common bad practices made by robots (and humans who code like robots)",
   "main": "dist/index.js",
   "publishConfig": {
@@ -39,16 +40,20 @@
   "peerDependencies": {
     "eslint": ">=8.0.0"
   },
+  "dependencies": {
+    "@typescript-eslint/types": "^7.0.0",
+    "@typescript-eslint/utils": "^7.0.0",
+    "eslint": "^8.57.0"
+  },
   "devDependencies": {
+    "@eslint/js": "^8.57.0",
     "@types/eslint": "^8.56.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.10.0",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
     "@typescript-eslint/rule-tester": "^7.18.0",
-    "@typescript-eslint/utils": "^7.0.0",
     "cross-env": "^10.0.0",
-    "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.29.0",
     "husky": "^9.1.7",
     "mocha": "^10.3.0",
@@ -61,8 +66,8 @@
     "build": "npm run lint && tsc",
     "test": "cross-env NODE_OPTIONS=\"--loader ts-node/esm\" mocha src/**/*.test.ts",
     "test:watch": "mocha --require ts-node/register --watch \"src/**/*.test.ts\"",
-    "lint": "eslint src --ext .ts",
-    "lint:fix": "eslint src --ext .ts --fix",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
     "format": "prettier --write src/**/*.ts",
     "prepare": "husky && npm run build"
   }

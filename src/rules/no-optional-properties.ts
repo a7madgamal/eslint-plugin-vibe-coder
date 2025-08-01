@@ -2,10 +2,24 @@ import { ESLintUtils, type TSESTree } from '@typescript-eslint/utils';
 import type { RuleContext } from '@typescript-eslint/utils/dist/ts-eslint';
 
 const createRule = ESLintUtils.RuleCreator(
-  (name) => `https://github.com/your-repo/rule/${name}`
+  (name) =>
+    `https://github.com/a7madgamal/eslint-plugin-vibe-coder/rule/${name}`
 );
 
-const rule = createRule({
+export const noOptionalProperties = createRule({
+  name: 'no-optional-properties',
+  meta: {
+    type: 'suggestion',
+    docs: {
+      description:
+        'Disallow optional properties in TypeScript interfaces and types',
+    },
+    schema: [],
+    messages: {
+      noOptionalProperty:
+        'Optional properties should be avoided. Use required properties instead.',
+    },
+  },
   defaultOptions: [],
   create(context: RuleContext<'noOptionalProperty', []>) {
     return {
@@ -127,19 +141,4 @@ const rule = createRule({
       },
     };
   },
-  name: 'no-optional-properties',
-  meta: {
-    type: 'suggestion',
-    docs: {
-      description:
-        'Disallow optional properties in TypeScript interfaces and types',
-    },
-    schema: [],
-    messages: {
-      noOptionalProperty:
-        'Optional properties should be avoided. Use required properties instead.',
-    },
-  },
 });
-
-export default rule;
