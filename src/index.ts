@@ -14,7 +14,7 @@ interface Plugin extends Omit<ESLint.Plugin, 'rules'> {
 const plugin: Plugin = {
   meta: {
     name: 'eslint-plugin-vibe-coder',
-    version: '0.0.3',
+    version: '0.0.4',
   },
   rules,
   configs: {
@@ -33,4 +33,5 @@ const plugin: Plugin = {
   },
 };
 
-export default plugin;
+// Export the plugin directly for ESLint compatibility
+export = plugin;
